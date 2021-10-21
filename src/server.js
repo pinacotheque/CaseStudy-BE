@@ -1,7 +1,7 @@
 import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
-import FavRouter from './favs/index.js'
+import ProductRouter from './products/index.js'
 import mongoose from 'mongoose'
 
 
@@ -16,7 +16,9 @@ server.use(cors());
 server.use(express.json());
 
 
-server.use("/favourites", FavRouter)
+server.use("/product", ProductRouter)
+
+
 
 
 console.table(listEndpoints(server))
