@@ -7,7 +7,7 @@ const ProductRouter = Router()
 
 ProductRouter.get("/", async (req, res, next) => {
     try {
-        const favs = await Product.find()
+        const favs = await Product.find({})
         res.send(favs)
     } catch (error) {
         console.log(error)
@@ -15,12 +15,14 @@ ProductRouter.get("/", async (req, res, next) => {
     }
 })
 
-ProductRouter.post("/:id", async (req, res, next) => {
+ProductRouter.post("/", async (req, res, next) => {
     try {
-        await Product.findOneAndUpdate(req.params.id, {
-            liked: true,
-        })
-        res.status(201).send("liked")
+        const newFav = await Product(...req.body)
+        if (newFav) {
+            res.status(201).send("congrats")
+        } else {
+            next(createError(404, 'Product not found!'))
+        }
     } catch (error) {
         console.log(error)
         next(createError(500, "Error, posting a fav"))
