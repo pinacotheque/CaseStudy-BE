@@ -1,5 +1,7 @@
 import { Router } from "express"
 import Product from "./schema.js"
+import createError from "http-errors"
+
 
 const ProductRouter = Router()
 
@@ -13,11 +15,12 @@ ProductRouter.get("/", async (req, res, next) => {
     }
 })
 
-ProductRouter.post("/", async (req, res, next) => {
+ProductRouter.post("/:id", async (req, res, next) => {
     try {
-        const newFav = new Product({ ...req.body })
-        const { _id } = await newFav.save()
-        res.status(201).send({ _id })
+        await Product.findOneAndUpdate(req.params.id, {
+            liked: true,
+        })
+        res.status(201).send("liked")
     } catch (error) {
         console.log(error)
         next(createError(500, "Error, posting a fav"))
@@ -26,8 +29,9 @@ ProductRouter.post("/", async (req, res, next) => {
 
 ProductRouter.put("/:id", async (req, res, next) => {
     try {
-        const Fav = req.params._id
-        const deletedFav = await Product.findOneAndUpdate(...req.body)
+        const deletedFav = await Product.findOneAndUpdate(req.params.id, {
+            liked: false,
+        })
         if (deletedFav) {
             res.status(204).send()
         } else {
