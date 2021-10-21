@@ -17,7 +17,7 @@ ProductRouter.get("/", async (req, res, next) => {
 
 ProductRouter.post("/", async (req, res, next) => {
     try {
-        const newFav = await Product(...req.body)
+        const newFav = await Product(req.body)
         if (newFav) {
             res.status(201).send("congrats")
         } else {
